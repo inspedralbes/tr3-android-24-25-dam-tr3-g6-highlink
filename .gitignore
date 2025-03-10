@@ -1,67 +1,67 @@
 # Archivos y carpetas a ignorar en un proyecto Unity 2D
 
-/test-git-unity/Temp/
-/test-git-unity/Library/
-/test-git-unity/Logs/
-/test-git-unity/obj/
-/test-git-unity/Build/
-/test-git-unity/Builds/
-/test-git-unity/UserSettings/
+/HighLink/Temp/
+/HighLink/Library/
+/HighLink/Logs/
+/HighLink/obj/
+/HighLink/Build/
+/HighLink/Builds/
+/HighLink/UserSettings/
 
 # Capturas de memoria y grabaciones
-/test-git-unity/[Mm]emoryCaptures/
-/test-git-unity/[Rr]ecordings/
+/HighLink/[Mm]emoryCaptures/
+/HighLink/[Rr]ecordings/
 
 # Complementos y cachés
-/test-git-unity/[Aa]ssets/Plugins/Editor/JetBrains*
-/test-git-unity/.vs/
-/test-git-unity/.gradle/
-/test-git-unity/ExportedObj/
-/test-git-unity/.consulo/
+/HighLink/[Aa]ssets/Plugins/Editor/JetBrains*
+/HighLink/.vs/
+/HighLink/.gradle/
+/HighLink/ExportedObj/
+/HighLink/.consulo/
 
 # Archivos de configuración y compilación
-/test-git-unity/*.csproj
-/test-git-unity/*.unityproj
-/test-git-unity/*.sln
-/test-git-unity/*.suo
-/test-git-unity/*.tmp
-/test-git-unity/*.user
-/test-git-unity/*.userprefs
-/test-git-unity/*.pidb
-/test-git-unity/*.booproj
-/test-git-unity/*.svd
-/test-git-unity/*.pdb
-/test-git-unity/*.mdb
-/test-git-unity/*.opendb
-/test-git-unity/*.VC.db
+/HighLink/*.csproj
+/HighLink/*.unityproj
+/HighLink/*.sln
+/HighLink/*.suo
+/HighLink/*.tmp
+/HighLink/*.user
+/HighLink/*.userprefs
+/HighLink/*.pidb
+/HighLink/*.booproj
+/HighLink/*.svd
+/HighLink/*.pdb
+/HighLink/*.mdb
+/HighLink/*.opendb
+/HighLink/*.VC.db
 
 # Archivos generados automáticamente
-/test-git-unity/sysinfo.txt
-/test-git-unity/*.apk
-/test-git-unity/*.aab
-/test-git-unity/*.unitypackage
-/test-git-unity/*.unitypackage.meta
-/test-git-unity/*.app
-/test-git-unity/crashlytics-build.properties
+/HighLink/sysinfo.txt
+/HighLink/*.apk
+/HighLink/*.aab
+/HighLink/*.unitypackage
+/HighLink/*.unitypackage.meta
+/HighLink/*.app
+/HighLink/crashlytics-build.properties
 
 # Datos de Addressables y StreamingAssets
-/test-git-unity/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
-/test-git-unity/[Aa]ssets/[Ss]treamingAssets/aa.meta
-/test-git-unity/[Aa]ssets/[Ss]treamingAssets/aa/
+/HighLink/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+/HighLink/[Aa]ssets/[Ss]treamingAssets/aa.meta
+/HighLink/[Aa]ssets/[Ss]treamingAssets/aa/
 
 # Configuración de TextMesh Pro
-/test-git-unity/[Aa]ssets/TextMesh Pro/Resources/Font Asset Creator Settings.asset
-/test-git-unity/[Aa]ssets/TextMesh Pro/Resources/LineBreaking Following Characters.asset
-/test-git-unity/[Aa]ssets/TextMesh Pro/Resources/LineBreaking Leading Characters.asset
+/HighLink/[Aa]ssets/TextMesh Pro/Resources/Font Asset Creator Settings.asset
+/HighLink/[Aa]ssets/TextMesh Pro/Resources/LineBreaking Following Characters.asset
+/HighLink/[Aa]ssets/TextMesh Pro/Resources/LineBreaking Leading Characters.asset
 
 # Datos de iluminación y Tilemaps
-/test-git-unity/[Aa]ssets/LightingData.asset
-/test-git-unity/[Aa]ssets/ReflectionProbe-*.exr
-/test-git-unity/[Aa]ssets/[Tt]ilemaps/*
-/test-git-unity/[Aa]ssets/[Tt]iles/*
+/HighLink/[Aa]ssets/LightingData.asset
+/HighLink/[Aa]ssets/ReflectionProbe-*.exr
+/HighLink/[Aa]ssets/[Tt]ilemaps/*
+/HighLink/[Aa]ssets/[Tt]iles/*
 
 # Archivos de configuración específicos del repositorio
-/test-git-unity/.idea/
-/test-git-unity/*.iml
-/test-git-unity/.vscode/
-/test-git-unity/*.log
+/HighLink/.idea/
+/HighLink/*.iml
+/HighLink/.vscode/
+/HighLink/*.log
