@@ -1,0 +1,67 @@
+# Archivos y carpetas a ignorar en un proyecto Unity 2D
+
+/HighLink/Temp/
+/HighLink/Library/
+/HighLink/Logs/
+/HighLink/obj/
+/HighLink/Build/
+/HighLink/Builds/
+/HighLink/UserSettings/
+
+# Capturas de memoria y grabaciones
+/HighLink/[Mm]emoryCaptures/
+/HighLink/[Rr]ecordings/
+
+# Complementos y cachés
+/HighLink/[Aa]ssets/Plugins/Editor/JetBrains*
+/HighLink/.vs/
+/HighLink/.gradle/
+/HighLink/ExportedObj/
+/HighLink/.consulo/
+
+# Archivos de configuración y compilación
+/HighLink/*.csproj
+/HighLink/*.unityproj
+/HighLink/*.sln
+/HighLink/*.suo
+/HighLink/*.tmp
+/HighLink/*.user
+/HighLink/*.userprefs
+/HighLink/*.pidb
+/HighLink/*.booproj
+/HighLink/*.svd
+/HighLink/*.pdb
+/HighLink/*.mdb
+/HighLink/*.opendb
+/HighLink/*.VC.db
+
+# Archivos generados automáticamente
+/HighLink/sysinfo.txt
+/HighLink/*.apk
+/HighLink/*.aab
+/HighLink/*.unitypackage
+/HighLink/*.unitypackage.meta
+/HighLink/*.app
+/HighLink/crashlytics-build.properties
+
+# Datos de Addressables y StreamingAssets
+/HighLink/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+/HighLink/[Aa]ssets/[Ss]treamingAssets/aa.meta
+/HighLink/[Aa]ssets/[Ss]treamingAssets/aa/
+
+# Configuración de TextMesh Pro
+/HighLink/[Aa]ssets/TextMesh Pro/Resources/Font Asset Creator Settings.asset
+/HighLink/[Aa]ssets/TextMesh Pro/Resources/LineBreaking Following Characters.asset
+/HighLink/[Aa]ssets/TextMesh Pro/Resources/LineBreaking Leading Characters.asset
+
+# Datos de iluminación y Tilemaps
+/HighLink/[Aa]ssets/LightingData.asset
+/HighLink/[Aa]ssets/ReflectionProbe-*.exr
+/HighLink/[Aa]ssets/[Tt]ilemaps/*
+/HighLink/[Aa]ssets/[Tt]iles/*
+
+# Archivos de configuración específicos del repositorio
+/HighLink/.idea/
+/HighLink/*.iml
+/HighLink/.vscode/
+/HighLink/*.log
