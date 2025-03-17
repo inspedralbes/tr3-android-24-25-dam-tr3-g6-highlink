@@ -5,7 +5,7 @@ public class RopeConstraint2D : MonoBehaviour
     public Transform player1; // Reference to the first player
     public Transform player2; // Reference to the second player
     public float maxDistance = 10f; // Maximum distance before the rope pulls them back
-    public float springForce = 2f; // Force applied by the spring joint
+    public float springForce = 5f; // Force applied by the spring joint
     public float damping = 0.2f; // Damping to reduce oscillations
 
     private SpringJoint2D springJoint;
