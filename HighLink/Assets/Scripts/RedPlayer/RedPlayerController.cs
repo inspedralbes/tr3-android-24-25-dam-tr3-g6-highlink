@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class RedPlayerController : MonoBehaviour
 {
@@ -7,7 +8,8 @@ public class RedPlayerController : MonoBehaviour
     private Animator anim;
     private bool grounded;
     [SerializeField] private float charSize = 0.15f;
-    private float jumpTime = 10f;
+    [SerializeField] private float jumpMultiplier = 1.5f;
+    private HashSet<Collider2D> groundContacts = new HashSet<Collider2D>();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -57,13 +59,13 @@ public class RedPlayerController : MonoBehaviour
         anim.SetBool("Walking", moveHorizontal != 0);
         anim.SetBool("Grounded", grounded);
 
-        if (body.linearVelocity.y < -0.1f)
+        if (body.linearVelocity.y < -0.25f)
         {
             // grounded = false;
             anim.SetBool("Falling", true);  // Trigger fall animation
         }
 
-        if (grounded && body.linearVelocity.y == 0) 
+        if (grounded && body.linearVelocity.y  >= -0.25f) 
         {
             anim.SetBool("Falling", false);  // Stop fall animation
         }
@@ -73,21 +75,38 @@ public class RedPlayerController : MonoBehaviour
     {
 
         // body.AddForce(new Vector2(0, 5), ForceMode2D.Impulse);
-        body.linearVelocity = new Vector2(body.linearVelocity.x, speed);
+        body.linearVelocity = new Vector2(body.linearVelocity.x, speed * jumpMultiplier);
         anim.SetTrigger("Jump");
-        jumpTime = anim.GetCurrentAnimatorStateInfo(0).length;
         grounded = false;
 
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "ground")
+        if (IsGroundTag(collision.gameObject.tag))
         {
-            
+            groundContacts.Add(collision.collider);
             grounded = true;
 
         }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (IsGroundTag(collision.gameObject.tag))
+        {
+            groundContacts.Remove(collision.collider);
+        }
+    }
+
+    public bool IsGrounded()
+    {
+        return groundContacts.Count > 0;
+    }
+
+    private bool IsGroundTag(string tag)
+    {
+        return tag == "Grounded" || tag == "Grounded2" || tag == "Grounded3" || tag == "ground";
     }
 
      void OnTriggerEnter2D (Collider2D other)
