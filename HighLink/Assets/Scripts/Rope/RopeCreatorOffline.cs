@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RopeCreator : MonoBehaviour
+public class RopeCreatorOffline : MonoBehaviour
 {
     public Transform player1; // Reference to the first player
     public Transform player2; // Reference to the second player
@@ -10,9 +10,6 @@ public class RopeCreator : MonoBehaviour
     public float fragmentSpacing = 0.5f; // Spacing between fragments
 
     private GameObject[] ropeFragments; // Array to store rope fragments
-
-    private NetworkVariable<NetworkObjectReference> player1Ref = new NetworkVariable<NetworkObjectReference>();
-    private NetworkVariable<NetworkObjectReference> player2Ref = new NetworkVariable<NetworkObjectReference>();
 
     void Start()
     {

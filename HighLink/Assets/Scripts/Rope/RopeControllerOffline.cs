@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RopeConstraint2D : MonoBehaviour
+public class RopeConstraint2DOffline : MonoBehaviour
 {
     public Transform player1; // Reference to the first player
     public Transform player2; // Reference to the second player
@@ -9,9 +9,6 @@ public class RopeConstraint2D : MonoBehaviour
     public float damping = 0.2f; // Damping to reduce oscillations
 
     private SpringJoint2D springJoint;
-
-    private NetworkVariable<NetworkObjectReference> player1Ref = new NetworkVariable<NetworkObjectReference>();
-    private NetworkVariable<NetworkObjectReference> player2Ref = new NetworkVariable<NetworkObjectReference>();
 
     void Start()
     {
