@@ -186,6 +186,7 @@ MonoBehaviour:
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: e8a6198fbc40b7d449373f429b197ea0, type: 2}
+      - {fileID: 11400000, guid: e8a6198fbc40b7d449373f429b197ea0, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -194,7 +195,7 @@ MonoBehaviour:
     TimeResyncInterval: 30
     EnsureNetworkVariableLengthSafety: 0
     EnableSceneManagement: 1
-    ForceSamePrefabs: 1
+    ForceSamePrefabs: 0
     RecycleNetworkIds: 1
     NetworkIdRecycleDelay: 120
     RpcHashSize: 0
@@ -1181,7 +1182,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.0279343, y: -0.75558, z: -10}
+  m_LocalPosition: {x: 1.1055707, y: -0.75557, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1648,6 +1649,7 @@ GameObject:
   - component: {fileID: 1826201181}
   - component: {fileID: 1826201180}
   - component: {fileID: 1826201182}
+  - component: {fileID: 1826201183}
   m_Layer: 0
   m_Name: RopeManager
   m_TagString: Untagged
@@ -1705,6 +1707,31 @@ MonoBehaviour:
   fragmentCount: 10
   ropeLength: 2
   fragmentSpacing: 0.1
+--- !u!114 &1826201183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826201179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2260892892
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &1846294503
 GameObject:
   m_ObjectHideFlags: 0
@@ -4499,8 +4526,41 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6989885515509309821, guid: 87fb98d97f666a94c91c4dd84bfd58ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 869090888904493281}
   m_SourcePrefab: {fileID: 100100000, guid: 87fb98d97f666a94c91c4dd84bfd58ad, type: 3}
+--- !u!1 &869090888904493280 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6989885515509309821, guid: 87fb98d97f666a94c91c4dd84bfd58ad, type: 3}
+  m_PrefabInstance: {fileID: 869090888904493279}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &869090888904493281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 869090888904493280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 66307160
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1001 &8245391019764200064
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4556,8 +4616,41 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6137850244761358027, guid: 3a196961f6f26fe46ab228f5e3bf3032, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8245391019764200066}
   m_SourcePrefab: {fileID: 100100000, guid: 3a196961f6f26fe46ab228f5e3bf3032, type: 3}
+--- !u!1 &8245391019764200065 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6137850244761358027, guid: 3a196961f6f26fe46ab228f5e3bf3032, type: 3}
+  m_PrefabInstance: {fileID: 8245391019764200064}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8245391019764200066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8245391019764200065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1825831939
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
