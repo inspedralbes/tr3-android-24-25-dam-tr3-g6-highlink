@@ -4,14 +4,19 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float speed = 5f;
+    [SerializeField] private float speed = 12f;
     private Rigidbody2D body;
     private Animator anim;
     private bool grounded;
-    [SerializeField] private float charSize = 0.15f;
-    [SerializeField] private float jumpMultiplier = 1.5f;
+    [SerializeField] private float charSize = 0.03f;
+    [SerializeField] private float jumpMultiplier = 1f;
+    [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float airMoveModifier = 0.3f;
+
     private HashSet<Collider2D> groundContacts = new HashSet<Collider2D>();
-    [SerializeField] private float maxSpeed = 10f;
+
+
+    private bool jumpIntent = false;
 
     public KeyCode JumpKey = KeyCode.UpArrow; // public KeyCode JumpKey 
     public KeyCode LeftKey = KeyCode.LeftArrow; // public KeyCode LeftKey
@@ -31,8 +36,29 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void Update()
+    {
+        anim.SetBool("Grounded", grounded);
+
+        if (body.linearVelocity.y < -0.15f)
+        {
+            // grounded = false;
+            anim.SetBool("Falling", true);  // Trigger fall animation
+        }
+
+        if (body.linearVelocity.y >= -0.15f) 
+        {
+            anim.SetBool("Falling", false);  // Stop fall animation
+        }
+
+        if (Input.GetKeyDown(JumpKey) && grounded)
+        {
+            jumpIntent = true;
+        }
+    }
+
+    // Update is called once per frame
+    void FixedUpdate()
     {
         float moveHorizontal = 0f;
         
@@ -40,7 +66,7 @@ public class PlayerController : MonoBehaviour
         {
             if(!grounded)
             {
-                moveHorizontal = -0.5f;
+                moveHorizontal = airMoveModifier * -1f;
             }
             else
             {
@@ -51,7 +77,7 @@ public class PlayerController : MonoBehaviour
         {
             if(!grounded)
             {
-                moveHorizontal = 0.7f;
+                moveHorizontal = airMoveModifier * 1f;
             }
             else
             {
@@ -72,24 +98,14 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector3(-charSize, charSize, charSize);
         }
 
-        if (Input.GetKeyDown(JumpKey) && grounded)
+        if (jumpIntent)
         {
             Jump();
+            jumpIntent = false;
         }
 
         anim.SetBool("Walking", moveHorizontal != 0);
-        anim.SetBool("Grounded", grounded);
-
-        if (body.linearVelocity.y < -0.15f)
-        {
-            // grounded = false;
-            anim.SetBool("Falling", true);  // Trigger fall animation
-        }
-
-        if (body.linearVelocity.y >= -0.15f) 
-        {
-            anim.SetBool("Falling", false);  // Stop fall animation
-        }
+        
 
         if(body.linearVelocity.magnitude > maxSpeed)
         {
