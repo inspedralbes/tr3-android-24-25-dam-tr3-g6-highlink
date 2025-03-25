@@ -1,13 +1,14 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class GameManagerController : MonoBehaviour
+public class GameManagerController : NetworkBehaviour
 {
 
     public static GameManagerController Instance { get; private set; }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-    [SerializeField] private RopeController ropeControllerPrefab;
-    private RopeController ropeController;
+    // [SerializeField] private RopeController ropeControllerPrefab;
+    // private RopeController ropeController;
     
     private NetworkVariable<int> playersConnected = new NetworkVariable<int>(0);
     private NetworkList<ulong> playerClientIds;
@@ -55,10 +56,10 @@ public class GameManagerController : MonoBehaviour
         playersConnected.Value--;
         playerClientIds.Remove(clientId);
         
-        if (ropeController != null)
-        {
-            DestroyRope();
-        }
+        // if (ropeController != null)
+        // {
+        //     DestroyRope();
+        // }
     }
 
     private void SpawnRope()
@@ -66,7 +67,7 @@ public class GameManagerController : MonoBehaviour
         if (!IsHost) return;
         
         // Find both players (host and client)
-        NetworkObject[] players = FindObjectsOfType<NetworkObject>();
+        NetworkObject[] players = FindObjectsByType<NetworkObject>(FindObjectsSortMode.None);
         Transform hostPlayer = null;
         Transform clientPlayer = null;
         
@@ -83,22 +84,22 @@ public class GameManagerController : MonoBehaviour
         
         if (hostPlayer != null && clientPlayer != null)
         {
-            // Spawn the rope controller on network
-            ropeController = Instantiate(ropeControllerPrefab);
-            ropeController.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.ServerClientId);
+            // // Spawn the rope controller on network
+            // ropeController = Instantiate(ropeControllerPrefab);
+            // ropeController.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.ServerClientId);
             
-            // Initialize the rope between players
-            ropeController.InitializeRope(hostPlayer, clientPlayer);
+            // // Initialize the rope between players
+            // ropeController.InitializeRope(hostPlayer, clientPlayer);
         }
     }
 
     private void DestroyRope()
     {
-        if (ropeController != null)
-        {
-            ropeController.GetComponent<NetworkObject>().Despawn();
-            Destroy(ropeController.gameObject);
-            ropeController = null;
-        }
+        // if (ropeController != null)
+        // {
+        //     ropeController.GetComponent<NetworkObject>().Despawn();
+        //     Destroy(ropeController.gameObject);
+        //     ropeController = null;
+        // }
     }
 }

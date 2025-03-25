@@ -11,8 +11,6 @@ public class RopeCreator : MonoBehaviour
 
     private GameObject[] ropeFragments; // Array to store rope fragments
 
-    private NetworkVariable<NetworkObjectReference> player1Ref = new NetworkVariable<NetworkObjectReference>();
-    private NetworkVariable<NetworkObjectReference> player2Ref = new NetworkVariable<NetworkObjectReference>();
 
     void Start()
     {

@@ -10,9 +10,6 @@ public class RopeConstraint2D : MonoBehaviour
 
     private SpringJoint2D springJoint;
 
-    private NetworkVariable<NetworkObjectReference> player1Ref = new NetworkVariable<NetworkObjectReference>();
-    private NetworkVariable<NetworkObjectReference> player2Ref = new NetworkVariable<NetworkObjectReference>();
-
     void Start()
     {
         // Check if player1 and player2 are assigned
