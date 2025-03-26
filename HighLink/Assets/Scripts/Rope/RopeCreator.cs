@@ -11,6 +11,7 @@ public class RopeCreator : MonoBehaviour
 
     private GameObject[] ropeFragments; // Array to store rope fragments
 
+
     void Start()
     {
         // Check if player1 and player2 are assigned

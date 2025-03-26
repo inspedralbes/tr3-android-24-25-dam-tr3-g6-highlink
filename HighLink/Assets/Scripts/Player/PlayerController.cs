@@ -1,14 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using Unity.Netcode;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [SerializeField] private float speed = 12f;
     private Rigidbody2D body;
     private Animator anim;
     private bool grounded;
-    [SerializeField] private float charSize = 0.03f;
+    // [SerializeField] private float charSize = 0.03f;
     [SerializeField] private float jumpMultiplier = 1f;
     [SerializeField] private float maxSpeed = 5f;
     [SerializeField] private float airMoveModifier = 0.3f;
@@ -22,8 +23,22 @@ public class PlayerController : MonoBehaviour
     public KeyCode LeftKey = KeyCode.LeftArrow; // public KeyCode LeftKey
     public KeyCode RightKey = KeyCode.RightArrow; // public KeyCode RightKey
 
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            Debug.Log("I am the owner of this player object.");
+            base.OnNetworkSpawn();
+            Initialize();
+        }
+        else
+        {
+            Debug.Log("I am not the owner of this player object.");
+        }
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Initialize()
     {
         body = GetComponent<Rigidbody2D>();
         body.linearVelocity = new Vector2(0, 0);
@@ -38,6 +53,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if(!IsOwner)
+        {
+            return;
+        }
         anim.SetBool("Grounded", grounded);
 
         if (body.linearVelocity.y < -0.15f)
@@ -60,6 +79,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if(!IsOwner)
+        {
+            return;
+        }
+
         float moveHorizontal = 0f;
         
         if (Input.GetKey(LeftKey))
@@ -91,11 +115,11 @@ public class PlayerController : MonoBehaviour
         // Flip the sprite
         if(moveHorizontal > 0.01f)
         {
-            transform.localScale = new Vector3(charSize, charSize, charSize);
+            this.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
         else if(moveHorizontal < -0.01f)
         {
-            transform.localScale = new Vector3(-charSize, charSize, charSize);
+            this.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
         }
 
         if (jumpIntent)
