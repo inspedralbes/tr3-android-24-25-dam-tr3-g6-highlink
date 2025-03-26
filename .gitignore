@@ -65,7 +65,3 @@
 /HighLink/*.iml
 /HighLink/.vscode/
 /HighLink/*.log
-
-# **Importante: Permitir la inclusión de escenas**
-!/HighLink/Assets/**/*.unity
-!/HighLink/Assets/**/*.unity.meta
