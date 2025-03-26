@@ -1,19 +1,25 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
-using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class LoadAndStoreJSON : MonoBehaviour
 {
-    [SerializeField] private string jsonURL = "http://localhost:4000/api/config";
-    [SerializeField] public static JSONclass datosJSON;
+    private string jsonURL = "http://localhost:4000/api/config";
+    public static Dictionary<string, ConfigData> configDictionary = new Dictionary<string, ConfigData>();
 
     [System.Serializable]
-    public class JSONclass
+    public class ConfigData
     {
         public string name;
-        public string value;
+        public float value; // Cambiado a float para manejar decimales directamente
         public string type;
+    }
+
+    [System.Serializable]
+    private class RawJsonData
+    {
+        public ConfigData[] Config;
     }
 
     void Start()
@@ -21,54 +27,55 @@ public class LoadAndStoreJSON : MonoBehaviour
         StartCoroutine(GetJSONData(jsonURL));
     }
 
-    IEnumerator GetJSONData(string jsonURL)
+    IEnumerator GetJSONData(string url)
     {
-        using (UnityWebRequest request = UnityWebRequest.Get(jsonURL))
+        using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
             yield return request.SendWebRequest();
 
-            if (request.result == UnityWebRequest.Result.ConnectionError ||
-                request.result == UnityWebRequest.Result.ProtocolError)
+            if (request.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError("Error al descargar JSON: " + request.error);
+                Debug.LogError($"Error al conectar: {request.error}");
+                yield break;
             }
-            else
+
+            string jsonText = request.downloadHandler.text;
+            Debug.Log($"JSON recibido: {jsonText}");
+
+            try
             {
-                string jsonText = request.downloadHandler.text;
-                Debug.Log("JSON Descargado: " + jsonText);
+                RawJsonData wrapper = JsonUtility.FromJson<RawJsonData>(jsonText);
 
-                datosJSON = JsonUtility.FromJson<JSONclass>(jsonText);
-
-                if (datosJSON != null)
+                if (wrapper?.Config == null)
                 {
-                    Debug.Log("Name: " + datosJSON.name);
-                    Debug.Log("Value: " + datosJSON.value);
-                    Debug.Log("Type: " + datosJSON.type);
+                    Debug.LogError("El JSON no tiene el formato esperado");
+                    yield break;
+                }
+
+                configDictionary.Clear();
+                foreach (var config in wrapper.Config)
+                {
+                    if (config != null && !string.IsNullOrEmpty(config.name))
+                    {
+                        configDictionary[config.name] = config;
+                        Debug.Log($"Cargado: {config.name} = {config.value} ({config.type})");
+                    }
                 }
             }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Error al procesar JSON: {e.Message}");
+            }
         }
+    }
 
-        // UnityWebRequest www = UnityWebRequest.Get(jsonURL);
-        // yield return www.SendWebRequest();
-
-        // if (www.result == UnityWebRequest.Result.ConnectionError ||
-        //     www.result == UnityWebRequest.Result.ProtocolError)
-        // {
-        //     Debug.LogError("Error al descargar JSON: " + www.error);
-        // }
-        // else
-        // {
-        //     string jsonText = www.downloadHandler.text;
-        //     Debug.Log("JSON Descargado: " + jsonText);
-
-        //     datosJSON = JsonUtility.FromJson<JSONclass>(jsonText);
-
-        //     if (datosJSON != null)
-        //     {
-        //         Debug.Log("Name: " + datosJSON.name);
-        //         Debug.Log("Value: " + datosJSON.value);
-        //         Debug.Log("Type: " + datosJSON.type);
-        //     }
-        // }
+    public static ConfigData GetConfig(string configName)
+    {
+        if (configDictionary.TryGetValue(configName, out ConfigData config))
+        {
+            return config;
+        }
+        Debug.LogWarning($"Configuración '{configName}' no encontrada");
+        return null;
     }
 }
