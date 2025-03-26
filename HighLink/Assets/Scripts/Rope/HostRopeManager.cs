@@ -5,6 +5,7 @@ using System.Linq;
 public class HostRopeManager : NetworkBehaviour
 {
     [SerializeField] private GameObject ropePrefab; // Non-networked prefab
+    [SerializeField] private GameObject cameraPrefab; // Non-networked prefab
 
     public override void OnNetworkSpawn()
     {
@@ -18,27 +19,47 @@ public class HostRopeManager : NetworkBehaviour
     {
         if (NetworkManager.ConnectedClients.Count == 2)
         {
-            NetworkObject[] players = new NetworkObject[2];
+            GameObject[] players = new GameObject[2];
 
-            players[0] = NetworkManager.Singleton.LocalClient.PlayerObject;
+            var connectedClients = NetworkManager.Singleton.ConnectedClients;
 
-            
+            Debug.Log("Connected clients: " + connectedClients.Count);
 
-            // Find first connected client player (index 1)
-            foreach (var client in NetworkManager.ConnectedClients)
-            {
-                if (client.Key != NetworkManager.LocalClientId)
-                {
-                    players[1] = client.Value.PlayerObject;
-                    break;
-                }
-            }
+            players[0] = GameObject.Find("RedPlayer(Clone)"); // Exact name
+            players[1] = GameObject.Find("YellowPlayer(Clone)");
 
-            Debug.Log(players[0] != null);
+            // // Get host player (server)
+            // if (connectedClients.TryGetValue(NetworkManager.Singleton.LocalClientId, out var localClient))
+            // {
+            //     players[0] = localClient.PlayerObject;
+            // }
 
-            Debug.Log(players[1] != null);
+            // // Get the other player
+            // foreach (var client in connectedClients)
+            // {
+            //     if (client.Key != NetworkManager.Singleton.LocalClientId)
+            //     {
+            //         players[1] = client.Value.PlayerObject;
+            //         break;
+            //     }
+            // }
 
+            // players[0] = NetworkManager.Singleton.LocalClient.PlayerObject;
+
+            // // Find first connected client player (index 1)
+            // foreach (var client in NetworkManager.ConnectedClients)
+            // {
+            //     if (client.Key != NetworkManager.LocalClientId)
+            //     {
+            //         players[1] = client.Value.PlayerObject;
+            //         break;
+            //     }
+            // }
+            Debug.Log(players[0] != null? "player 1 not null" : "player 1 null");
+            Debug.Log(players[1] != null? "player 2 not null" : "player 2 null");
             // Debug.Log("Both players: " + players[0] != null && players[1] != null? "both not null" : "both null");
+
+            // Debug.Log(players);
 
             if (players[0] != null)
             {
@@ -62,6 +83,7 @@ public class HostRopeManager : NetworkBehaviour
             player2Ref.TryGet(out NetworkObject player2))
         {
             InstantiateRope(player1.gameObject, player2.gameObject);
+            InstantiateCamera(player1.gameObject, player2.gameObject);
         }
     }
 
@@ -82,6 +104,24 @@ public class HostRopeManager : NetworkBehaviour
         // Set the player references
         ropeController.player1 = player1.transform;
         ropeController.player2 = player2.transform;
+    }
+
+    private void InstantiateCamera(GameObject player1, GameObject player2)
+    {
+        GameObject camera = Instantiate(cameraPrefab);
+
+        // Get the script from the instantiated object
+        var CameraFollowPlayers = camera.GetComponentInChildren<CameraFollowPlayers>();
+
+        if (CameraFollowPlayers == null)
+        {
+            Debug.LogError("CameraFollowPlayers script not found in children of camera prefab");
+            return;
+        }
+
+        // Set the player references
+        CameraFollowPlayers.player1 = player1.transform;
+        CameraFollowPlayers.player2 = player2.transform;
     }
 
     public override void OnDestroy()

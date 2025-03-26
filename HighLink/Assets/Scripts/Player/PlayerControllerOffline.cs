@@ -8,7 +8,7 @@ public class PlayerControllerOffline : MonoBehaviour
     private Rigidbody2D body;
     private Animator anim;
     private bool grounded;
-    [SerializeField] private float charSize = 0.03f;
+    // [SerializeField] private float charSize = 0.03f;
     [SerializeField] private float jumpMultiplier = 1f;
     [SerializeField] private float maxSpeed = 5f;
     [SerializeField] private float airMoveModifier = 0.3f;
@@ -91,11 +91,11 @@ public class PlayerControllerOffline : MonoBehaviour
         // Flip the sprite
         if(moveHorizontal > 0.01f)
         {
-            transform.localScale = new Vector3(charSize, charSize, charSize);
+            this.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
         else if(moveHorizontal < -0.01f)
         {
-            transform.localScale = new Vector3(-charSize, charSize, charSize);
+            this.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
         }
 
         if (jumpIntent)
