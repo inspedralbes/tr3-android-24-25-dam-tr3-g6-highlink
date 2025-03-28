@@ -7,7 +7,7 @@ public class PlayerControllerOffline : MonoBehaviour
     [SerializeField] private float speed = 12f;
     private Rigidbody2D body;
     private Animator anim;
-    private bool grounded;
+    public bool grounded;
     // [SerializeField] private float charSize = 0.03f;
     [SerializeField] private float jumpMultiplier = 1f;
     [SerializeField] private float maxSpeed = 5f;

@@ -110,7 +110,7 @@ public class RopeCreator : MonoBehaviour
         }
     }
 
-    void ResetRopePositions()
+    public void ResetRopePositions()
     {
         if (player1 == null || player2 == null || ropeFragments == null || ropeFragments.Length == 0)
             return;
