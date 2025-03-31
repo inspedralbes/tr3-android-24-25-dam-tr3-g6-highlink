@@ -1,9 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-using Unity.Netcode;
 
-public class PlayerController : NetworkBehaviour
+public class PlayerControllerOffline : MonoBehaviour
 {
     [SerializeField] private float speed = 12f;
     private Rigidbody2D body;
@@ -23,22 +22,8 @@ public class PlayerController : NetworkBehaviour
     public KeyCode LeftKey = KeyCode.LeftArrow; // public KeyCode LeftKey
     public KeyCode RightKey = KeyCode.RightArrow; // public KeyCode RightKey
 
-    public override void OnNetworkSpawn()
-    {
-        if (IsOwner)
-        {
-            Debug.Log("I am the owner of this player object.");
-            base.OnNetworkSpawn();
-            Initialize();
-        }
-        else
-        {
-            Debug.Log("I am not the owner of this player object.");
-        }
-    }
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private void Initialize()
+    void Start()
     {
         body = GetComponent<Rigidbody2D>();
         body.linearVelocity = new Vector2(0, 0);
@@ -53,10 +38,6 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
-        if(!IsOwner)
-        {
-            return;
-        }
         anim.SetBool("Grounded", grounded);
 
         if (body.linearVelocity.y < -0.15f)
@@ -79,11 +60,6 @@ public class PlayerController : NetworkBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(!IsOwner)
-        {
-            return;
-        }
-
         float moveHorizontal = 0f;
         
         if (Input.GetKey(LeftKey))
