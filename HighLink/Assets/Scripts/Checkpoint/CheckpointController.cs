@@ -11,6 +11,8 @@ public class CheckpointController : MonoBehaviour
     private GameObject[] checkpoints = new GameObject[2];
     private Vector3[] checkpointPosition = new Vector3[2];
 
+    private bool ReadyToSpawn = true;
+
     [SerializeField] private RopeCreator ropeCreator;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -39,10 +41,16 @@ public class CheckpointController : MonoBehaviour
 
     private void SpawnCheckpoint()
     {
+        if (!ReadyToSpawn)
+        {
+            return;
+        }
         if(!player1.GetComponent<PlayerControllerOffline>().grounded || !player2.GetComponent<PlayerControllerOffline>().grounded)
         {
             return;
         }
+        ReadyToSpawn = false;
+        StartCoroutine("CoolDownSpawnCheckpoint");
         for (int i = 0; i < checkpoints.Length; i++)
         {
             if (checkpoints[i] == null)
@@ -69,6 +77,12 @@ public class CheckpointController : MonoBehaviour
                 // });
             }
         }
+    }
+
+    private IEnumerator CoolDownSpawnCheckpoint()
+    {
+        yield return new WaitForSeconds(30f); // Cooldown duration
+        ReadyToSpawn = true;
     }
 
     private IEnumerator ResetToIdle(Animator animator, float delay)

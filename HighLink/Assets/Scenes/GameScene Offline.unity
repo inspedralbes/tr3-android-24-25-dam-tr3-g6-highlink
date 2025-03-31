@@ -5746,6 +5746,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705730470}
   m_CullTransparentMesh: 1
+--- !u!1 &1136460307
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1136460309}
+  - component: {fileID: 1136460308}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1136460308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136460307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 482d5a8566717194ca47f711de5aa7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AllSounds:
+  - Type: 0
+    Clip: {fileID: 8300000, guid: a592e94d5fdcf074c8db232e6e26dd42, type: 3}
+    Volume: 0.3
+    Source: {fileID: 0}
+  - Type: 1
+    Clip: {fileID: 8300000, guid: 8af5385904ea13547943f983bf5e159d, type: 3}
+    Volume: 0.69
+    Source: {fileID: 0}
+  - Type: 2
+    Clip: {fileID: 8300000, guid: cbc4b8928659b0e47956f58ee9cfc2b8, type: 3}
+    Volume: 1
+    Source: {fileID: 0}
+--- !u!4 &1136460309
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136460307}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.3421135, y: 3.3416598, z: -0.023015374}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1172027374
 GameObject:
   m_ObjectHideFlags: 0
@@ -10611,12 +10668,13 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 519420032}
-  - {fileID: 619394802}
-  - {fileID: 1345393341}
   - {fileID: 1840909172837404701}
+  - {fileID: 619394802}
   - {fileID: 1282860292423691483}
-  - {fileID: 1172027376}
   - {fileID: 1378734484}
+  - {fileID: 1136460309}
+  - {fileID: 1345393341}
+  - {fileID: 1172027376}
   - {fileID: 439195620}
   - {fileID: 2124203584}
   - {fileID: 1928756722}
