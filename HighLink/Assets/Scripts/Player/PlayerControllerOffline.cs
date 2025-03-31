@@ -115,10 +115,11 @@ public class PlayerControllerOffline : MonoBehaviour
 
     private void Jump()
     {
-
+        AudioManager.Instance.Play(AudioManager.SoundType.Jump);
         // body.linearVelocity = new Vector2(body.linearVelocity.x, speed * jumpMultiplier);
         body.AddForce(new Vector2(0, speed * jumpMultiplier), ForceMode2D.Impulse);
         anim.SetTrigger("Jump");
+        
         grounded = false;
 
     }

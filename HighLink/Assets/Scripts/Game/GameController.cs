@@ -39,7 +39,8 @@ public class GameController : MonoBehaviour
     }
 
     private void GameStart() {
-        Debug.Log("Going to create a game");    
+        Debug.Log("Going to create a game");  
+        AudioManager.Instance.ChangeMusic(AudioManager.SoundType.Music_Game);  
         StartCoroutine("CreateGame");
 
     }
