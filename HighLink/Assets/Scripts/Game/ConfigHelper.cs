@@ -4,6 +4,12 @@ public static class ConfigHelper
 {
     public static float GetFloat(string configName)
     {
+        if (!ConfigManager.Instance.IsConfigReady)
+        {
+            Debug.LogError("Configuración no cargada. Verifica LoadAndStoreJSON");
+            return 0f;
+        }
+
         var config = LoadAndStoreJSON.GetConfig(configName);
         if (config != null && config.type == "float")
         {
@@ -15,10 +21,16 @@ public static class ConfigHelper
 
     public static int GetInt(string configName)
     {
+        if (!ConfigManager.Instance.IsConfigReady)
+        {
+            Debug.LogError("Configuración no cargada");
+            return 0;
+        }
+
         var config = LoadAndStoreJSON.GetConfig(configName);
         if (config != null && config.type == "int")
         {
-            return (int)config.value; // Conversión explícita de float a int
+            return (int)config.value;
         }
         Debug.LogError($"Configuración inválida para int: {configName}");
         return 0;
@@ -26,12 +38,12 @@ public static class ConfigHelper
 
     public static string GetString(string configName)
     {
-        var config = LoadAndStoreJSON.GetConfig(configName);
-        if (config != null)
+        if (!ConfigManager.Instance.IsConfigReady)
         {
-            return config.value.ToString();
+            return "CONFIG_NOT_LOADED";
         }
-        Debug.LogError($"Configuración no encontrada: {configName}");
-        return string.Empty;
+
+        var config = LoadAndStoreJSON.GetConfig(configName);
+        return config?.value.ToString() ?? "NOT_FOUND";
     }
 }
