@@ -2,90 +2,101 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
+using UnityEngine.Networking;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class RegisterManager : MonoBehaviour
 {
-    // Referencias a los InputFields (asignar desde el Inspector)
     [Header("Input Fields")]
     [SerializeField] private TMP_InputField nameInputField;
     [SerializeField] private TMP_InputField emailInputField;
     [SerializeField] private TMP_InputField passwordInputField;
     [SerializeField] private TMP_InputField confirmPasswordInputField;
 
-    // Referencia al botón de registro (asignar desde el Inspector)
     [Header("Buttons")]
     [SerializeField] private Button registerButton;
 
+    [Header("UI Feedback")]
+    [SerializeField] private TMP_Text feedbackText;
+    [SerializeField] private Color errorColor = Color.red;
+    [SerializeField] private Color successColor = Color.green;
+
+    // URL of your registration endpoint on the server
+    [Header("Server Settings")]
+    [SerializeField] private string registerEndpoint = "http://localhost:4000/api/users";
+
     private void Start()
     {
-        // Configurar campos de contraseña
         passwordInputField.contentType = TMP_InputField.ContentType.Password;
         confirmPasswordInputField.contentType = TMP_InputField.ContentType.Password;
-
-        // Asignar el evento al botón
         registerButton.onClick.AddListener(OnRegisterButtonClicked);
     }
 
     private void OnRegisterButtonClicked()
     {
-        // Obtener los valores de los campos
         string name = nameInputField.text.Trim();
         string email = emailInputField.text.Trim();
         string password = passwordInputField.text;
         string confirmPassword = confirmPasswordInputField.text;
 
-        // Validar campos vacíos
+        // Validations
         if (string.IsNullOrEmpty(name))
         {
-            Debug.LogError("Error: El campo Nombre no puede estar vacío");
+            ShowFeedback("Error: Name field cannot be empty", errorColor);
+            StartCoroutine(HideFeedbackAfterDelay(7f));
+            Debug.LogError("Error: Name field cannot be empty");
             return;
         }
 
         if (string.IsNullOrEmpty(email))
         {
-            Debug.LogError("Error: El campo Email no puede estar vacío");
+            ShowFeedback("Error: Email field cannot be empty", errorColor);
+            StartCoroutine(HideFeedbackAfterDelay(7f));
+            Debug.LogError("Error: Email field cannot be empty");
             return;
         }
 
-        // Validar formato de email
         if (!IsValidEmail(email))
         {
-            Debug.LogError("Error: El formato del email no es válido");
+            ShowFeedback("Error: Email format is not valid", errorColor);
+            StartCoroutine(HideFeedbackAfterDelay(7f));
+            Debug.LogError("Error: Email format is not valid");
             return;
         }
 
-        // Validar contraseña
         if (string.IsNullOrEmpty(password))
         {
-            Debug.LogError("Error: El campo Contraseña no puede estar vacío");
+            ShowFeedback("Error: Password field cannot be empty", errorColor);
+            StartCoroutine(HideFeedbackAfterDelay(7f));
+            Debug.LogError("Error: Password field cannot be empty");
             return;
         }
 
         if (password.Length < 8)
         {
-            Debug.LogError("Error: La contraseña debe tener al menos 8 caracteres");
+            ShowFeedback("Error: Password must be at least 8 characters long", errorColor);
+            StartCoroutine(HideFeedbackAfterDelay(7f));
+            Debug.LogError("Error: Password must be at least 8 characters long");
             return;
         }
 
         if (password != confirmPassword)
         {
-            Debug.LogError("Error: Las contraseñas no coinciden");
+            ShowFeedback("Error: Passwords do not match", errorColor);
+            StartCoroutine(HideFeedbackAfterDelay(7f));
+            Debug.LogError("Error: Passwords do not match");
             return;
         }
 
-        // Si todo es válido, mostrar los datos por consola
-        Debug.Log("Registro válido. Datos ingresados:");
-        Debug.Log($"Nombre: {name}");
-        Debug.Log($"Email: {email}");
-        Debug.Log($"Contraseña: [PROTEGIDA]"); // Por seguridad no mostramos la contraseña real
+        // If everything is valid, proceed with registration
+        StartCoroutine(RegisterUser(name, email, password));
     }
 
-    // Método para validar formato de email
     private bool IsValidEmail(string email)
     {
         try
         {
-            // Patrón simple para validación de email
             string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             return Regex.IsMatch(email, pattern, RegexOptions.IgnoreCase);
         }
@@ -93,5 +104,88 @@ public class RegisterManager : MonoBehaviour
         {
             return false;
         }
+    }
+
+    private IEnumerator RegisterUser(string nameCli, string email, string password)
+    {
+        registerButton.interactable = false;
+        ShowFeedback("Registering...", Color.yellow);
+        StartCoroutine(HideFeedbackAfterDelay(7f));
+
+        UserData userData = new UserData
+        {
+            name = nameCli,
+            email = email,
+            password = password
+        };
+
+        // Convert to JSON
+        string jsonData = JsonUtility.ToJson(userData);
+
+        // Create the request
+        UnityWebRequest request = new UnityWebRequest(registerEndpoint, "POST");
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        // Send the request and wait for response
+        yield return request.SendWebRequest();
+
+        // Handle the response
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            ShowFeedback("Registration successful!", successColor);
+            StartCoroutine(HideFeedbackAfterDelay(7f));
+            Debug.Log("Registration successful!");
+            Debug.Log("Server response: " + request.downloadHandler.text);
+
+            yield return new WaitForSeconds(10f);
+            SceneManager.LoadScene("MainScene");
+        }
+        else
+        {
+            if (request.responseCode == 400) // Bad Request (invalid data)
+            {
+                ShowFeedback("Error: " + request.downloadHandler.text, errorColor);
+                StartCoroutine(HideFeedbackAfterDelay(7f));
+            }
+            else if (request.responseCode == 409) // Conflict (user/email already exists)
+            {
+                ShowFeedback("Error: Email is already registered", errorColor);
+                StartCoroutine(HideFeedbackAfterDelay(7f));
+            }
+            else
+            {
+                ShowFeedback("Registration error: " + request.error, errorColor);
+                StartCoroutine(HideFeedbackAfterDelay(7f));
+                Debug.LogError("Registration error: " + request.error);
+                Debug.LogError("Server response: " + request.downloadHandler.text);
+            }
+        }
+
+        registerButton.interactable = true;
+    }
+
+    private void ShowFeedback(string message, Color color)
+    {
+        feedbackText.text = message;
+        feedbackText.color = color;
+        feedbackText.gameObject.SetActive(true); // In case it was hidden
+    }
+
+    private IEnumerator HideFeedbackAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        feedbackText.gameObject.SetActive(false);
+    }
+
+    // Class to serialize user data
+    [System.Serializable]
+    private class UserData
+    {
+        public string name;
+        public string email;
+        public string password;
     }
 }
