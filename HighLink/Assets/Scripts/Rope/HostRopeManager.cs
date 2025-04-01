@@ -1,17 +1,104 @@
 using Unity.Netcode;
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 public class HostRopeManager : NetworkBehaviour
 {
-    [SerializeField] private GameObject ropePrefab; // Non-networked prefab
-    [SerializeField] private GameObject cameraPrefab; // Non-networked prefab
+    [SerializeField] private GameObject ropePrefab;
+    [SerializeField] private GameObject cameraPrefab;
+    
+    // Add these new variables
+    private RopeCreator currentRope;
+    private NetworkVariable<RopeState> ropeState = new NetworkVariable<RopeState>();
+    private float lastSyncTime;
+    [SerializeField] private float syncInterval = 0.1f;
+
+    private struct RopeState : INetworkSerializable
+    {
+        public Vector3[] fragmentPositions;
+        public Quaternion[] fragmentRotations;
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            int length = fragmentPositions?.Length ?? 0;
+            serializer.SerializeValue(ref length);
+            
+            if (serializer.IsReader)
+            {
+                fragmentPositions = new Vector3[length];
+                fragmentRotations = new Quaternion[length];
+            }
+
+            for (int i = 0; i < length; i++)
+            {
+                serializer.SerializeValue(ref fragmentPositions[i]);
+                serializer.SerializeValue(ref fragmentRotations[i]);
+            }
+        }
+    }
 
     public override void OnNetworkSpawn()
     {
         if (IsHost)
         {
             NetworkManager.OnClientConnectedCallback += OnClientConnected;
+        }
+        
+        // Add this for client-side updates
+        ropeState.OnValueChanged += OnRopeStateChanged;
+    }
+
+    private void Update()
+    {
+        // Add this new update logic
+        if (IsHost && currentRope != null && Time.time - lastSyncTime >= syncInterval)
+        {
+            UpdateRopeState();
+            lastSyncTime = Time.time;
+        }
+    }
+
+    private void UpdateRopeState()
+    {
+        if (currentRope == null || currentRope.ropeFragments == null) return;
+
+        var newState = new RopeState
+        {
+            fragmentPositions = new Vector3[currentRope.ropeFragments.Length],
+            fragmentRotations = new Quaternion[currentRope.ropeFragments.Length]
+        };
+
+        for (int i = 0; i < currentRope.ropeFragments.Length; i++)
+        {
+            if (currentRope.ropeFragments[i] != null)
+            {
+                newState.fragmentPositions[i] = currentRope.ropeFragments[i].transform.position;
+                newState.fragmentRotations[i] = currentRope.ropeFragments[i].transform.rotation;
+            }
+        }
+
+        ropeState.Value = newState;
+    }
+
+    private void OnRopeStateChanged(RopeState previous, RopeState current)
+    {
+        if (currentRope == null || currentRope.ropeFragments == null) return;
+
+        for (int i = 0; i < Mathf.Min(currentRope.ropeFragments.Length, current.fragmentPositions.Length); i++)
+        {
+            if (currentRope.ropeFragments[i] != null)
+            {
+                currentRope.ropeFragments[i].transform.position = Vector3.Lerp(
+                    currentRope.ropeFragments[i].transform.position,
+                    current.fragmentPositions[i],
+                    Time.deltaTime * (1f/syncInterval) * 2f);
+
+                currentRope.ropeFragments[i].transform.rotation = Quaternion.Slerp(
+                    currentRope.ropeFragments[i].transform.rotation,
+                    current.fragmentRotations[i],
+                    Time.deltaTime * (1f/syncInterval) * 2f);
+            }
         }
     }
 
@@ -20,58 +107,15 @@ public class HostRopeManager : NetworkBehaviour
         if (NetworkManager.ConnectedClients.Count == 2)
         {
             GameObject[] players = new GameObject[2];
-
-            var connectedClients = NetworkManager.Singleton.ConnectedClients;
-
-            Debug.Log("Connected clients: " + connectedClients.Count);
-
-            players[0] = GameObject.Find("RedPlayer(Clone)"); // Exact name
+            players[0] = GameObject.Find("RedPlayer(Clone)");
             players[1] = GameObject.Find("YellowPlayer(Clone)");
 
-            // // Get host player (server)
-            // if (connectedClients.TryGetValue(NetworkManager.Singleton.LocalClientId, out var localClient))
-            // {
-            //     players[0] = localClient.PlayerObject;
-            // }
-
-            // // Get the other player
-            // foreach (var client in connectedClients)
-            // {
-            //     if (client.Key != NetworkManager.Singleton.LocalClientId)
-            //     {
-            //         players[1] = client.Value.PlayerObject;
-            //         break;
-            //     }
-            // }
-
-            // players[0] = NetworkManager.Singleton.LocalClient.PlayerObject;
-
-            // // Find first connected client player (index 1)
-            // foreach (var client in NetworkManager.ConnectedClients)
-            // {
-            //     if (client.Key != NetworkManager.LocalClientId)
-            //     {
-            //         players[1] = client.Value.PlayerObject;
-            //         break;
-            //     }
-            // }
-            Debug.Log(players[0] != null? "player 1 not null" : "player 1 null");
-            Debug.Log(players[1] != null? "player 2 not null" : "player 2 null");
-            // Debug.Log("Both players: " + players[0] != null && players[1] != null? "both not null" : "both null");
-
-            // Debug.Log(players);
-
-            if (players[0] != null)
+            if (players[0] != null && players[1] != null)
             {
-                Debug.Log("about to spawn rope");
-                if(players[1] != null)
-                {
-                    Debug.Log("Spawning rope frfr");
-                    SpawnRopeClientRpc(
-                        new NetworkObjectReference(players[0]),
-                        new NetworkObjectReference(players[1])
-                    );
-                }
+                SpawnRopeClientRpc(
+                    new NetworkObjectReference(players[0]),
+                    new NetworkObjectReference(players[1])
+                );
             }
         }
     }
@@ -90,18 +134,12 @@ public class HostRopeManager : NetworkBehaviour
     private void InstantiateRope(GameObject player1, GameObject player2)
     {
         GameObject rope = Instantiate(ropePrefab);
+        currentRope = rope.GetComponent<RopeCreator>(); // Store reference to current rope
 
-        // Get the script from the instantiated object
-        var ropeCreator = rope.GetComponent<RopeCreator>();
+        currentRope.player1 = player1.transform;
+        currentRope.player2 = player2.transform;
 
-        // Set the player references
-        ropeCreator.player1 = player1.transform;
-        ropeCreator.player2 = player2.transform;
-
-        // Get the other script from the instantiated object
         var ropeController = rope.GetComponent<RopeConstraint2D>();
-
-        // Set the player references
         ropeController.player1 = player1.transform;
         ropeController.player2 = player2.transform;
     }
@@ -109,19 +147,13 @@ public class HostRopeManager : NetworkBehaviour
     private void InstantiateCamera(GameObject player1, GameObject player2)
     {
         GameObject camera = Instantiate(cameraPrefab);
-
-        // Get the script from the instantiated object
         var CameraFollowPlayers = camera.GetComponentInChildren<CameraFollowPlayers>();
 
-        if (CameraFollowPlayers == null)
+        if (CameraFollowPlayers != null)
         {
-            Debug.LogError("CameraFollowPlayers script not found in children of camera prefab");
-            return;
+            CameraFollowPlayers.player1 = player1.transform;
+            CameraFollowPlayers.player2 = player2.transform;
         }
-
-        // Set the player references
-        CameraFollowPlayers.player1 = player1.transform;
-        CameraFollowPlayers.player2 = player2.transform;
     }
 
     public override void OnDestroy()
@@ -130,5 +162,6 @@ public class HostRopeManager : NetworkBehaviour
         {
             NetworkManager.OnClientConnectedCallback -= OnClientConnected;
         }
+        ropeState.OnValueChanged -= OnRopeStateChanged;
     }
 }

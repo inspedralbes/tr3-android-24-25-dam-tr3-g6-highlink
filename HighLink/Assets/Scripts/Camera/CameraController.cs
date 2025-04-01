@@ -16,5 +16,7 @@ public class CameraFollowPlayers : MonoBehaviour
         
         Vector3 midpoint = (player1.position + player2.position) * camModifier / 2f;
         transform.position = new Vector3(midpoint.x, midpoint.y, transform.position.z);
+
+        GameController.Instance.UpdatePosition(transform.position);
     }
 }

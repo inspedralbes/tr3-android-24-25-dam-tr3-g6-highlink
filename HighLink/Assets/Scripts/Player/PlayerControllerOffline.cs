@@ -7,7 +7,7 @@ public class PlayerControllerOffline : MonoBehaviour
     [SerializeField] private float speed = 12f;
     private Rigidbody2D body;
     private Animator anim;
-    private bool grounded;
+    public bool grounded;
     // [SerializeField] private float charSize = 0.03f;
     [SerializeField] private float jumpMultiplier = 1f;
     [SerializeField] private float maxSpeed = 5f;
@@ -115,10 +115,11 @@ public class PlayerControllerOffline : MonoBehaviour
 
     private void Jump()
     {
-
+        AudioManager.Instance.Play(AudioManager.SoundType.Jump);
         // body.linearVelocity = new Vector2(body.linearVelocity.x, speed * jumpMultiplier);
         body.AddForce(new Vector2(0, speed * jumpMultiplier), ForceMode2D.Impulse);
         anim.SetTrigger("Jump");
+        
         grounded = false;
 
     }
