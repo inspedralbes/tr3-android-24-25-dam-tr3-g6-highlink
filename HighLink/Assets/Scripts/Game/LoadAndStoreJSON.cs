@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 public class LoadAndStoreJSON : MonoBehaviour
 {
-    private string jsonURL = "http://localhost:4000/api/config";
+    private string jsonURL = "http://localhost:4000";
+    private string apiPath = "/api/configs";
     public static Dictionary<string, ConfigData> configDictionary = new Dictionary<string, ConfigData>();
 
     [System.Serializable]
@@ -24,7 +25,7 @@ public class LoadAndStoreJSON : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(GetJSONData(jsonURL));
+        StartCoroutine(GetJSONData(jsonURL + apiPath));
     }
 
     IEnumerator GetJSONData(string url)
