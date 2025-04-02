@@ -5860,7 +5860,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4081817737513941711, guid: 48e22b843fae27f4ea56dcf170befe6a, type: 3}
       propertyPath: maxSpeed
-      value: 4
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4081817737513941711, guid: 48e22b843fae27f4ea56dcf170befe6a, type: 3}
       propertyPath: jumpMultiplier
@@ -6041,7 +6041,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2213838167030291054, guid: 53f2b6e8b2714d1438c08597b7a722b8, type: 3}
       propertyPath: maxSpeed
-      value: 4
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2213838167030291054, guid: 53f2b6e8b2714d1438c08597b7a722b8, type: 3}
       propertyPath: jumpMultiplier

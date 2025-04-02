@@ -5,8 +5,7 @@ using System.Collections.Generic;
 
 public class LoadAndStoreJSON : MonoBehaviour
 {
-    private string jsonURL = "http://localhost:4000";
-    private string apiPath = "/api/configs";
+    private string jsonURL = "http://highlink.dam.inspedralbes.cat/back/api/config";
     public static Dictionary<string, ConfigData> configDictionary = new Dictionary<string, ConfigData>();
 
     [System.Serializable]
@@ -25,11 +24,12 @@ public class LoadAndStoreJSON : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(GetJSONData(jsonURL + apiPath));
+        StartCoroutine(GetJSONData(jsonURL));
     }
 
     IEnumerator GetJSONData(string url)
     {
+        Debug.Log($"Conectando a: {url}");
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
             yield return request.SendWebRequest();

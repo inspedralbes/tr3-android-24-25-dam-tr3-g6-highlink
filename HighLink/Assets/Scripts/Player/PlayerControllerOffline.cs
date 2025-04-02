@@ -32,7 +32,9 @@ public class PlayerControllerOffline : MonoBehaviour
         body.freezeRotation = true; 
 
         jumpMultiplier = ConfigHelper.GetFloat("jumpHeight")> 0?ConfigHelper.GetFloat("jumpHeight") : jumpMultiplier;
+        Debug.Log("JumpMultiplier: " + jumpMultiplier);
         speed = ConfigHelper.GetFloat("speed") > 0 ? ConfigHelper.GetFloat("speed") : speed;
+        Debug.Log("Speed: " + speed);
 
 
         anim = GetComponent<Animator>();
@@ -120,10 +122,11 @@ public class PlayerControllerOffline : MonoBehaviour
 
     private void Jump()
     {
-        AudioManager.Instance.Play(AudioManager.SoundType.Jump);
+        
         // body.linearVelocity = new Vector2(body.linearVelocity.x, speed * jumpMultiplier);
         body.AddForce(new Vector2(0, speed * jumpMultiplier), ForceMode2D.Impulse);
         anim.SetTrigger("Jump");
+        AudioManager.Instance.Play(AudioManager.SoundType.Jump);
         
         grounded = false;
 

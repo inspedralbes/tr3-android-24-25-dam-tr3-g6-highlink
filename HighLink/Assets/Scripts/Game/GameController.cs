@@ -8,8 +8,8 @@ public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; }
 
-    private string ServerUri = "http://localhost:4000";
-    private string StatsAPIUri = "http://localhost:4001";
+    private string ServerUri = "http://highlink.dam.inspedralbes.cat/back";
+    private string StatsAPIUri = "http://highlink.dam.inspedralbes.cat/back/stats";
     private string GameAPIUri = "/api/games";
     private string CheckStatsUri = "/state-stats";
 
@@ -58,6 +58,7 @@ public class GameController : MonoBehaviour
                 ShowGameId(game.id);
                 ServerOnline = true;
                 CheckStatsService();
+                Debug.Log("Game created with ID: " + game.id);
             }
         }
     }
@@ -79,7 +80,7 @@ public class GameController : MonoBehaviour
                 if (Stats.state == "running") {
                     Debug.Log("Stats service is online");
                     StatsOnline = true;
-                    InvokeRepeating("StartSendingStats", 0, 5);
+                    InvokeRepeating("StartSendingStats", 0, 2.5f);
                 } else {
                     Debug.Log("Stats service is offline");
                 }
@@ -108,26 +109,39 @@ public class GameController : MonoBehaviour
 
         Debug.Log(jsonString);
 
-        using (UnityWebRequest req = new UnityWebRequest(StatsAPIUri, "POST"))
-        {
-            byte[] jsonToSend = System.Text.Encoding.UTF8.GetBytes(jsonString);
-            req.uploadHandler = new UploadHandlerRaw(jsonToSend);
-            req.downloadHandler = new DownloadHandlerBuffer();
-            req.SetRequestHeader("Content-Type", "application/json");
-
+        using (UnityWebRequest req = UnityWebRequest.PostWwwForm(StatsAPIUri + $"?game_id={GameId}&height={Mathf.Round(heightToShow * 100f) / 100f}", "POST")) {
             yield return req.SendWebRequest();
-
-            if (req.result == UnityWebRequest.Result.ConnectionError || req.result == UnityWebRequest.Result.ProtocolError)
-            {
+            Debug.Log("Stats being sent: " + jsonString);
+            if (req.result == UnityWebRequest.Result.ConnectionError || req.result == UnityWebRequest.Result.ProtocolError) {
                 Debug.LogError(req.error);
                 StatsOnline = false;
-                CancelInvoke("SendStats");
-            }
-            else
-            {
+                CancelInvoke("StartSendingStats");
+            } else {
                 Debug.Log("Stats sent successfully");
             }
         }
+
+        // using (UnityWebRequest req = new UnityWebRequest(StatsAPIUri, "POST"))
+        // {
+        //     Debug.Log("Stats being sent: " + jsonString);
+        //     byte[] jsonToSend = System.Text.Encoding.UTF8.GetBytes(jsonString);
+        //     req.uploadHandler = new UploadHandlerRaw(jsonToSend);
+        //     req.downloadHandler = new DownloadHandlerBuffer();
+        //     req.SetRequestHeader("Content-Type", "application/json");
+
+        //     yield return req.SendWebRequest();
+
+        //     if (req.result == UnityWebRequest.Result.ConnectionError || req.result == UnityWebRequest.Result.ProtocolError)
+        //     {
+        //         Debug.LogError(req.error);
+        //         StatsOnline = false;
+        //         CancelInvoke("StartSendingStats");
+        //     }
+        //     else
+        //     {
+        //         Debug.Log("Stats sent successfully");
+        //     }
+        // }
     }
 
     public void UpdatePosition(Vector3 newPosition)
