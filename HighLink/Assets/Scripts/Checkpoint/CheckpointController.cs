@@ -71,10 +71,7 @@ public class CheckpointController : MonoBehaviour
 
                 StartCoroutine(ResetToIdle(animator, 0.5f));
 
-                // animator.GetComponent<AnimationEventHandler>().OnAnimationEnd(() =>
-                // {
-                //     animator.SetTrigger("Idle");
-                // });
+               
             }
         }
     }
@@ -93,7 +90,6 @@ public class CheckpointController : MonoBehaviour
 
     private void MovePlayersToCheckpoint()
     {
-            Debug.Log(player1.GetComponent<PlayerControllerOffline>().grounded && player2.GetComponent<PlayerControllerOffline>().grounded);
             player1.position = checkpointPosition[0];
             player1.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
             player2.position = checkpointPosition[1];

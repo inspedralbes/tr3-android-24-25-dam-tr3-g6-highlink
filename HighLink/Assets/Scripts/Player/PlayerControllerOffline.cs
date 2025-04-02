@@ -32,9 +32,7 @@ public class PlayerControllerOffline : MonoBehaviour
         body.freezeRotation = true; 
 
         jumpMultiplier = ConfigHelper.GetFloat("jumpHeight")> 0?ConfigHelper.GetFloat("jumpHeight") : jumpMultiplier;
-        Debug.Log("JumpMultiplier: " + jumpMultiplier);
         speed = ConfigHelper.GetFloat("speed") > 0 ? ConfigHelper.GetFloat("speed") : speed;
-        Debug.Log("Speed: " + speed);
 
 
         anim = GetComponent<Animator>();
@@ -163,7 +161,6 @@ public class PlayerControllerOffline : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Player entered the trigger zone.");
             grounded = true;
         }
         

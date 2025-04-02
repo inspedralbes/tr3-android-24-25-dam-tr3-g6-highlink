@@ -29,7 +29,6 @@ public class LoadAndStoreJSON : MonoBehaviour
 
     IEnumerator GetJSONData(string url)
     {
-        Debug.Log($"Conectando a: {url}");
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
             yield return request.SendWebRequest();
@@ -41,7 +40,6 @@ public class LoadAndStoreJSON : MonoBehaviour
             }
 
             string jsonText = request.downloadHandler.text;
-            Debug.Log($"JSON recibido: {jsonText}");
 
             try
             {
@@ -59,7 +57,6 @@ public class LoadAndStoreJSON : MonoBehaviour
                     if (config != null && !string.IsNullOrEmpty(config.name))
                     {
                         configDictionary[config.name] = config;
-                        Debug.Log($"Cargado: {config.name} = {config.value} ({config.type})");
                     }
                 }
             }

@@ -23,8 +23,6 @@ public class HeightController : MonoBehaviour
     public void UpdateHeight(float newHeight)
     {
         Height = (int)newHeight;
-        // Debug.Log($"Height updated to: {Height}");
         heightText.text = "Height: " + Height.ToString();
-        // Add your Height update logic here
     }
 }

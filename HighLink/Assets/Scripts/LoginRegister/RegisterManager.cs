@@ -73,11 +73,7 @@ public class RegisterManager : MonoBehaviour
             return;
         }
 
-        // Si todo es válido, mostrar los datos por consola
-        Debug.Log("Registro válido. Datos ingresados:");
-        Debug.Log($"Nombre: {name}");
-        Debug.Log($"Email: {email}");
-        Debug.Log($"Contraseña: [PROTEGIDA]"); // Por seguridad no mostramos la contraseña real
+    
     }
 
     // Método para validar formato de email
