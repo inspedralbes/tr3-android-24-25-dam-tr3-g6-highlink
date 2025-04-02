@@ -8,8 +8,8 @@ public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; }
 
-    private string ServerUri = "http://localhost:4000";
-    private string StatsAPIUri = "http://localhost:4001";
+    private string ServerUri = "https://highlink.dam.inspedralbes.cat/back";
+    private string StatsAPIUri = "https://highlink.dam.inspedralbes.cat/back/stats";
     private string GameAPIUri = "/api/games";
     private string CheckStatsUri = "/state-stats";
 
@@ -22,7 +22,6 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("GameController Awake");
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -39,14 +38,12 @@ public class GameController : MonoBehaviour
     }
 
     private void GameStart() {
-        Debug.Log("Going to create a game");  
         AudioManager.Instance.ChangeMusic(AudioManager.SoundType.Music_Game);  
         StartCoroutine("CreateGame");
 
     }
 
     IEnumerator CreateGame() {
-        Debug.Log("Creating game...");
         using (UnityWebRequest req = UnityWebRequest.PostWwwForm(ServerUri + GameAPIUri, "")) {
             yield return req.SendWebRequest();
 
@@ -63,7 +60,6 @@ public class GameController : MonoBehaviour
     }
 
     private void CheckStatsService() {
-        Debug.Log("Checking stats service...");
         StartCoroutine("CheckStats");
     }
 
@@ -77,11 +73,8 @@ public class GameController : MonoBehaviour
                 var response = req.downloadHandler.text;
                 var Stats = JsonUtility.FromJson<StatsServiceState>(response);
                 if (Stats.state == "running") {
-                    Debug.Log("Stats service is online");
                     StatsOnline = true;
-                    InvokeRepeating("StartSendingStats", 0, 5);
-                } else {
-                    Debug.Log("Stats service is offline");
+                    InvokeRepeating("StartSendingStats", 0, 2.5f);
                 }
                 
             }
@@ -99,40 +92,25 @@ public class GameController : MonoBehaviour
             yield break;
         };
 
-        Debug.Log("Sending stats...");
 
         StatsData jsonData = new StatsData(GameId, Mathf.Round(heightToShow * 100f) / 100f);
 
         // Convert the JSON object to a string
         string jsonString = JsonUtility.ToJson(jsonData);
 
-        Debug.Log(jsonString);
 
-        using (UnityWebRequest req = new UnityWebRequest(StatsAPIUri, "POST"))
-        {
-            byte[] jsonToSend = System.Text.Encoding.UTF8.GetBytes(jsonString);
-            req.uploadHandler = new UploadHandlerRaw(jsonToSend);
-            req.downloadHandler = new DownloadHandlerBuffer();
-            req.SetRequestHeader("Content-Type", "application/json");
-
+        using (UnityWebRequest req = UnityWebRequest.PostWwwForm(StatsAPIUri + $"?game_id={GameId}&height={Mathf.Round(heightToShow * 100f) / 100f}", "POST")) {
             yield return req.SendWebRequest();
-
-            if (req.result == UnityWebRequest.Result.ConnectionError || req.result == UnityWebRequest.Result.ProtocolError)
-            {
+            if (req.result == UnityWebRequest.Result.ConnectionError || req.result == UnityWebRequest.Result.ProtocolError) {
                 Debug.LogError(req.error);
                 StatsOnline = false;
-                CancelInvoke("SendStats");
-            }
-            else
-            {
-                Debug.Log("Stats sent successfully");
+                CancelInvoke("StartSendingStats");
             }
         }
     }
 
     public void UpdatePosition(Vector3 newPosition)
     {
-        // Debug.Log($"Camera position updated to: {newPosition}");
         // Add your Camera position update logic here
         var heightToSave = newPosition.y;
 

@@ -25,7 +25,6 @@ public class ConfigManager : MonoBehaviour
         if (_jsonLoader == null)
         {
             _jsonLoader = gameObject.AddComponent<LoadAndStoreJSON>();
-            Debug.Log("LoadAndStoreJSON creado automáticamente");
         }
     }
 

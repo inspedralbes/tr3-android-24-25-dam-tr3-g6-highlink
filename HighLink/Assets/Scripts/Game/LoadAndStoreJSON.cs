@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class LoadAndStoreJSON : MonoBehaviour
 {
-    private string jsonURL = "http://localhost:4000/api/config";
+    private string jsonURL = "https://highlink.dam.inspedralbes.cat/back/api/config";
     public static Dictionary<string, ConfigData> configDictionary = new Dictionary<string, ConfigData>();
 
     [System.Serializable]
@@ -40,7 +40,6 @@ public class LoadAndStoreJSON : MonoBehaviour
             }
 
             string jsonText = request.downloadHandler.text;
-            Debug.Log($"JSON recibido: {jsonText}");
 
             try
             {
@@ -58,7 +57,6 @@ public class LoadAndStoreJSON : MonoBehaviour
                     if (config != null && !string.IsNullOrEmpty(config.name))
                     {
                         configDictionary[config.name] = config;
-                        Debug.Log($"Cargado: {config.name} = {config.value} ({config.type})");
                     }
                 }
             }

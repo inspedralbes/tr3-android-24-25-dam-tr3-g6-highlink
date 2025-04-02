@@ -5,13 +5,14 @@ using System.Collections;
 public class PlayerControllerOffline : MonoBehaviour
 {
     [SerializeField] private float speed = 12f;
+    [SerializeField] private float jumpMultiplier = 1f;
+    [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float airMoveModifier = 0.3f;
     private Rigidbody2D body;
     private Animator anim;
     public bool grounded;
     // [SerializeField] private float charSize = 0.03f;
-    [SerializeField] private float jumpMultiplier = 1f;
-    [SerializeField] private float maxSpeed = 5f;
-    [SerializeField] private float airMoveModifier = 0.3f;
+    
 
     private HashSet<Collider2D> groundContacts = new HashSet<Collider2D>();
 
@@ -29,6 +30,10 @@ public class PlayerControllerOffline : MonoBehaviour
         body.linearVelocity = new Vector2(0, 0);
         body.gravityScale = 1;
         body.freezeRotation = true; 
+
+        jumpMultiplier = ConfigHelper.GetFloat("jumpHeight")> 0?ConfigHelper.GetFloat("jumpHeight") : jumpMultiplier;
+        speed = ConfigHelper.GetFloat("speed") > 0 ? ConfigHelper.GetFloat("speed") : speed;
+
 
         anim = GetComponent<Animator>();
         grounded = true;
@@ -115,10 +120,11 @@ public class PlayerControllerOffline : MonoBehaviour
 
     private void Jump()
     {
-        AudioManager.Instance.Play(AudioManager.SoundType.Jump);
+        
         // body.linearVelocity = new Vector2(body.linearVelocity.x, speed * jumpMultiplier);
         body.AddForce(new Vector2(0, speed * jumpMultiplier), ForceMode2D.Impulse);
         anim.SetTrigger("Jump");
+        AudioManager.Instance.Play(AudioManager.SoundType.Jump);
         
         grounded = false;
 
@@ -155,7 +161,6 @@ public class PlayerControllerOffline : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Player entered the trigger zone.");
             grounded = true;
         }
         
