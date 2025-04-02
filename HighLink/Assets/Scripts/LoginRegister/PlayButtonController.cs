@@ -6,7 +6,7 @@ public class PlayButtonController : MonoBehaviour
 {
     [Header("Scenes Configuration")]
     [SerializeField] private string sceneIfLoggedIn = "GameScene"; // Escena cuando hay sesión
-    [SerializeField] private string sceneIfNotLoggedIn = "LoginScene"; // Escena cuando no hay sesión
+    // [SerializeField] private string sceneIfNotLoggedIn = "LoginScene"; // Escena cuando no hay sesión
 
     [Header("UI Feedback")]
     [SerializeField] private Button playButton;
@@ -28,7 +28,7 @@ public class PlayButtonController : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene(sceneIfNotLoggedIn);
+            SceneManager.LoadScene("GameSceneOffline");
         }
     }
 }
