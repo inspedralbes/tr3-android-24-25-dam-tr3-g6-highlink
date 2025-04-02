@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class LoadAndStoreJSON : MonoBehaviour
 {
-    private string jsonURL = "http://highlink.dam.inspedralbes.cat/back/api/config";
+    private string jsonURL = "https://highlink.dam.inspedralbes.cat/back/api/config";
     public static Dictionary<string, ConfigData> configDictionary = new Dictionary<string, ConfigData>();
 
     [System.Serializable]

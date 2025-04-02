@@ -8,8 +8,8 @@ public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; }
 
-    private string ServerUri = "http://highlink.dam.inspedralbes.cat/back";
-    private string StatsAPIUri = "http://highlink.dam.inspedralbes.cat/back/stats";
+    private string ServerUri = "https://highlink.dam.inspedralbes.cat/back";
+    private string StatsAPIUri = "https://highlink.dam.inspedralbes.cat/back/stats";
     private string GameAPIUri = "/api/games";
     private string CheckStatsUri = "/state-stats";
 
