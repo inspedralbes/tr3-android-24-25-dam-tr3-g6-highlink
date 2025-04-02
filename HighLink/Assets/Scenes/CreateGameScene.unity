@@ -1672,6 +1672,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2023688834}
+  - component: {fileID: 2023688835}
   m_Layer: 0
   m_Name: GamesForID
   m_TagString: Untagged
@@ -1694,6 +1695,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2023688835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023688833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0326cfe5649bd98489402f31459a1c68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstGameIdInputField: {fileID: 1064603609}
+  secondGameIdInputField: {fileID: 1141412747}
+  thirdGameIdInputField: {fileID: 149821480}
+  gamesForIdEndpoint: http://localhost:4000/api/game/user/
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
